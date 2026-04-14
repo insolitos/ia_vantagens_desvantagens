@@ -1,0 +1,1654 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IA no Ensino e na Aprendizagem</title>
+<style>
+  :root {
+    --van: #0a5c47;
+    --van-light: #e1f5ee;
+    --van-mid: #1d9e75;
+    --van-dark: #063d2f;
+    --des: #b84a1c;
+    --des-light: #faece7;
+    --des-mid: #d85a30;
+    --des-dark: #7a2e0e;
+    --neutral: #2c2c2a;
+    --neutral-light: #f4f2ed;
+    --neutral-mid: #888780;
+    --neutral-border: rgba(44,44,42,0.12);
+    --white: #ffffff;
+    --amber: #ba7517;
+    --amber-light: #faeeda;
+    --radius: 12px;
+    --radius-sm: 8px;
+    --shadow: 0 2px 12px rgba(0,0,0,0.08);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--neutral-light);
+    color: var(--neutral);
+    font-size: 15px;
+    line-height: 1.65;
+    min-height: 100vh;
+  }
+
+  /* HERO */
+  .hero {
+    background: var(--neutral);
+    color: white;
+    padding: 3rem 2rem 2.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 220px; height: 220px;
+    border-radius: 50%;
+    background: rgba(29,158,117,0.15);
+    pointer-events: none;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -80px; left: -40px;
+    width: 280px; height: 280px;
+    border-radius: 50%;
+    background: rgba(216,90,48,0.12);
+    pointer-events: none;
+  }
+  .hero-tag {
+    display: inline-block;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.85);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 20px;
+    margin-bottom: 1.2rem;
+  }
+  .hero h1 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: clamp(1.8rem, 5vw, 3rem);
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+    position: relative;
+  }
+  .hero h1 span.green { color: #5dcaa5; }
+  .hero h1 span.orange { color: #f0997b; }
+  .hero-sub {
+    color: rgba(255,255,255,0.65);
+    max-width: 560px;
+    margin: 0 auto 2rem;
+    font-size: 14px;
+  }
+  .hero-stats {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+    position: relative;
+  }
+  .stat-item {
+    text-align: center;
+  }
+  .stat-num {
+    font-family: Georgia, serif;
+    font-size: 2.2rem;
+    font-weight: 700;
+    line-height: 1;
+    display: block;
+  }
+  .stat-num.green { color: #5dcaa5; }
+  .stat-num.orange { color: #f0997b; }
+  .stat-label {
+    font-size: 11px;
+    color: rgba(255,255,255,0.5);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-top: 4px;
+    display: block;
+  }
+
+  /* NAV TABS */
+  .nav-container {
+    background: white;
+    border-bottom: 1px solid var(--neutral-border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .nav-tabs {
+    display: flex;
+    max-width: 900px;
+    margin: 0 auto;
+    gap: 0;
+  }
+  .nav-tab {
+    flex: 1;
+    padding: 1rem 0.5rem;
+    text-align: center;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    color: var(--neutral-mid);
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s;
+    user-select: none;
+    background: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+  }
+  .nav-tab:hover { color: var(--neutral); background: var(--neutral-light); }
+  .nav-tab.active-van { color: var(--van); border-bottom-color: var(--van-mid); }
+  .nav-tab.active-des { color: var(--des); border-bottom-color: var(--des-mid); }
+  .nav-tab.active-syn { color: var(--amber); border-bottom-color: var(--amber); }
+  .nav-tab .tab-count {
+    display: inline-block;
+    font-size: 10px;
+    padding: 1px 6px;
+    border-radius: 10px;
+    margin-left: 5px;
+    vertical-align: middle;
+  }
+  .nav-tab.active-van .tab-count { background: var(--van-light); color: var(--van); }
+  .nav-tab.active-des .tab-count { background: var(--des-light); color: var(--des); }
+
+  /* MAIN CONTENT */
+  .main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 4rem;
+  }
+
+  .section-header {
+    margin-bottom: 1.5rem;
+  }
+  .section-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 5px 12px;
+    border-radius: 20px;
+    margin-bottom: 0.8rem;
+  }
+  .badge-van { background: var(--van-light); color: var(--van); }
+  .badge-des { background: var(--des-light); color: var(--des); }
+  .badge-syn { background: var(--amber-light); color: var(--amber); }
+  .section-title {
+    font-family: Georgia, serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--neutral);
+    line-height: 1.25;
+    margin-bottom: 0.5rem;
+  }
+  .section-desc {
+    color: var(--neutral-mid);
+    font-size: 13.5px;
+  }
+
+  /* FILTER BAR */
+  .filter-bar {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+  }
+  .filter-btn {
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid var(--neutral-border);
+    background: white;
+    color: var(--neutral-mid);
+    transition: all 0.15s;
+  }
+  .filter-btn:hover { border-color: var(--neutral-mid); color: var(--neutral); }
+  .filter-btn.active-van { background: var(--van-light); border-color: var(--van-mid); color: var(--van); }
+  .filter-btn.active-des { background: var(--des-light); border-color: var(--des-mid); color: var(--des); }
+  .filter-btn.active-all { background: var(--neutral); border-color: var(--neutral); color: white; }
+
+  /* CARDS GRID */
+  .cards-grid {
+    display: grid;
+    gap: 1rem;
+  }
+
+  /* CARD */
+  .card {
+    background: white;
+    border-radius: var(--radius);
+    border: 1px solid var(--neutral-border);
+    overflow: hidden;
+    transition: box-shadow 0.2s, transform 0.2s;
+  }
+  .card:hover { box-shadow: var(--shadow); transform: translateY(-1px); }
+  .card-header {
+    padding: 1.1rem 1.25rem;
+    cursor: pointer;
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    user-select: none;
+  }
+  .card-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .icon-van { background: var(--van-light); }
+  .icon-des { background: var(--des-light); }
+  .card-meta { flex: 1; min-width: 0; }
+  .card-title {
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--neutral);
+    margin-bottom: 3px;
+    line-height: 1.3;
+  }
+  .card-preview {
+    font-size: 13px;
+    color: var(--neutral-mid);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .card-arrow {
+    color: var(--neutral-mid);
+    font-size: 12px;
+    transition: transform 0.2s;
+    padding-top: 4px;
+    flex-shrink: 0;
+  }
+  .card.open .card-arrow { transform: rotate(180deg); }
+  .card-body {
+    display: none;
+    padding: 0 1.25rem 1.25rem;
+    border-top: 1px solid var(--neutral-border);
+  }
+  .card.open .card-body { display: block; }
+  .card-desc {
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--neutral);
+    padding: 1rem 0 0.8rem;
+  }
+  .card-desc p { margin-bottom: 0.7rem; }
+  .card-desc p:last-child { margin-bottom: 0; }
+
+  /* EVIDENCE METER */
+  .evidence-block {
+    margin-top: 1rem;
+    padding: 0.8rem 1rem;
+    background: var(--neutral-light);
+    border-radius: var(--radius-sm);
+  }
+  .evidence-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--neutral-mid);
+    margin-bottom: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .evidence-level {
+    font-weight: 700;
+    font-size: 12px;
+  }
+  .level-alto { color: var(--van); }
+  .level-medio { color: var(--amber); }
+  .level-baixo { color: var(--des); }
+  .evidence-bar-bg {
+    background: rgba(0,0,0,0.08);
+    height: 6px;
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .evidence-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.6s ease;
+  }
+  .fill-van { background: var(--van-mid); }
+  .fill-amber { background: var(--amber); }
+  .fill-des { background: var(--des-mid); }
+
+  /* STUDY REFS */
+  .studies {
+    margin-top: 1rem;
+  }
+  .studies-title {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--neutral-mid);
+    margin-bottom: 0.5rem;
+  }
+  .study-item {
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    font-size: 12.5px;
+    color: #555;
+    padding: 5px 0;
+    border-bottom: 1px solid var(--neutral-border);
+    line-height: 1.5;
+  }
+  .study-item:last-child { border-bottom: none; }
+  .study-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 6px;
+  }
+  .dot-van { background: var(--van-mid); }
+  .dot-des { background: var(--des-mid); }
+  .study-year {
+    font-weight: 600;
+    color: var(--neutral);
+    flex-shrink: 0;
+  }
+
+  /* TABS */
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* SYNTHESIS */
+  .syn-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  .syn-card {
+    border-radius: var(--radius);
+    padding: 1.25rem;
+    border: 1px solid var(--neutral-border);
+  }
+  .syn-card.van-card { background: var(--van-light); border-color: rgba(29,158,117,0.2); }
+  .syn-card.des-card { background: var(--des-light); border-color: rgba(216,90,48,0.2); }
+  .syn-num {
+    font-family: Georgia, serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 0.3rem;
+  }
+  .syn-card.van-card .syn-num { color: var(--van); }
+  .syn-card.des-card .syn-num { color: var(--des); }
+  .syn-label {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+  .syn-card.van-card .syn-label { color: var(--van-dark); }
+  .syn-card.des-card .syn-label { color: var(--des-dark); }
+  .syn-sub { font-size: 12.5px; color: var(--neutral-mid); }
+
+  /* BALANCE SCALE */
+  .balance-section {
+    background: white;
+    border: 1px solid var(--neutral-border);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+  .balance-title {
+    font-family: Georgia, serif;
+    font-size: 1.2rem;
+    margin-bottom: 1.2rem;
+  }
+  .balance-visual {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 1rem;
+    margin: 1.2rem 0;
+  }
+  .balance-side {
+    flex: 1;
+    max-width: 200px;
+  }
+  .balance-bar {
+    border-radius: 8px 8px 0 0;
+    margin-bottom: 8px;
+    transition: height 1s ease;
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: white;
+  }
+  .bar-van { background: var(--van-mid); height: 160px; }
+  .bar-des { background: var(--des-mid); height: 120px; }
+  .balance-label {
+    font-size: 12px;
+    font-weight: 600;
+    margin-top: 4px;
+  }
+  .balance-center {
+    font-size: 2rem;
+    padding-bottom: 4px;
+    color: var(--neutral-mid);
+  }
+  .vs-line {
+    width: 1px;
+    height: 180px;
+    background: var(--neutral-border);
+    margin: 0 0.5rem;
+  }
+
+  /* KEY TAKEAWAYS */
+  .takeaways {
+    margin-bottom: 2rem;
+  }
+  .takeaway-item {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 1rem;
+    background: white;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--neutral-border);
+    margin-bottom: 0.75rem;
+  }
+  .takeaway-icon {
+    font-size: 1.4rem;
+    flex-shrink: 0;
+    line-height: 1;
+    margin-top: 1px;
+  }
+  .takeaway-text {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .takeaway-text strong { color: var(--neutral); font-weight: 600; }
+
+  /* DEBATE QUESTIONS */
+  .debate-section {
+    background: linear-gradient(135deg, #1c1c1a 0%, #2c2c2a 100%);
+    border-radius: var(--radius);
+    padding: 1.75rem;
+    color: white;
+    margin-bottom: 2rem;
+  }
+  .debate-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 1.2rem;
+  }
+  .debate-icon { font-size: 1.5rem; }
+  .debate-title {
+    font-family: Georgia, serif;
+    font-size: 1.2rem;
+    color: white;
+  }
+  .debate-q {
+    padding: 0.6rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    font-size: 13.5px;
+    color: rgba(255,255,255,0.8);
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+  }
+  .debate-q:last-child { border-bottom: none; }
+  .q-num {
+    font-weight: 700;
+    color: #5dcaa5;
+    flex-shrink: 0;
+    font-size: 12px;
+    margin-top: 2px;
+  }
+
+  /* SOURCES */
+  .sources-section {
+    background: white;
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    border: 1px solid var(--neutral-border);
+  }
+  .sources-title {
+    font-family: Georgia, serif;
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    color: var(--neutral);
+  }
+  .source-item {
+    font-size: 12px;
+    color: var(--neutral-mid);
+    padding: 6px 0;
+    border-bottom: 1px solid var(--neutral-border);
+    line-height: 1.5;
+  }
+  .source-item:last-child { border-bottom: none; }
+  .source-authors { font-weight: 600; color: var(--neutral); }
+
+  /* FOOTER */
+  .footer {
+    text-align: center;
+    padding: 1.5rem;
+    font-size: 11.5px;
+    color: var(--neutral-mid);
+    border-top: 1px solid var(--neutral-border);
+    background: white;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 600px) {
+    .hero { padding: 2rem 1.2rem 1.8rem; }
+    .hero-stats { gap: 1.2rem; }
+    .nav-tab { font-size: 12px; padding: 0.8rem 0.3rem; }
+    .main { padding: 1.5rem 1rem 3rem; }
+    .syn-grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .card { animation: fadeUp 0.4s ease both; }
+  .card:nth-child(1) { animation-delay: 0.05s; }
+  .card:nth-child(2) { animation-delay: 0.1s; }
+  .card:nth-child(3) { animation-delay: 0.15s; }
+  .card:nth-child(4) { animation-delay: 0.2s; }
+  .card:nth-child(5) { animation-delay: 0.25s; }
+  .card:nth-child(6) { animation-delay: 0.3s; }
+  .card:nth-child(7) { animation-delay: 0.35s; }
+  .card:nth-child(8) { animation-delay: 0.4s; }
+  .card:nth-child(9) { animation-delay: 0.45s; }
+  .card:nth-child(10) { animation-delay: 0.5s; }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-tag">Debate &amp; Reflexão · Ensino Obrigatório</div>
+  <h1>A <span class="green">Inteligência Artificial</span><br>no Ensino e na <span class="orange">Aprendizagem</span></h1>
+  <p class="hero-sub">O que dizem os estudos académicos? Explora as evidências, forma a tua opinião.</p>
+  <div class="hero-stats">
+    <div class="stat-item">
+      <span class="stat-num green" id="cnt-van">10</span>
+      <span class="stat-label">Vantagens</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num orange" id="cnt-des">10</span>
+      <span class="stat-label">Desvantagens</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num" style="color:#fac775" id="cnt-est">40+</span>
+      <span class="stat-label">Estudos citados</span>
+    </div>
+  </div>
+</div>
+
+<!-- NAV -->
+<div class="nav-container">
+  <div class="nav-tabs">
+    <button class="nav-tab active-van" onclick="showTab('van',this)">
+      ✓ Vantagens <span class="tab-count">10</span>
+    </button>
+    <button class="nav-tab" onclick="showTab('des',this)">
+      ✗ Desvantagens <span class="tab-count">10</span>
+    </button>
+    <button class="nav-tab" onclick="showTab('syn',this)">
+      ⊙ Síntese
+    </button>
+  </div>
+</div>
+
+<div class="main">
+
+<!-- ============================================================
+     VANTAGENS
+     ============================================================ -->
+<div id="tab-van" class="tab-content active">
+  <div class="section-header">
+    <span class="section-badge badge-van">✓ Vantagens · 10 dimensões</span>
+    <h2 class="section-title">O que a IA pode trazer de positivo para o ensino</h2>
+    <p class="section-desc">Baseado em meta-análises, revisões sistemáticas e estudos publicados em revistas científicas de referência.</p>
+  </div>
+
+  <div class="cards-grid">
+
+    <!-- V1 -->
+    <div class="card" id="v1">
+      <div class="card-header" onclick="toggleCard('v1')">
+        <div class="card-icon icon-van">🎯</div>
+        <div class="card-meta">
+          <div class="card-title">Personalização da aprendizagem</div>
+          <div class="card-preview">A IA adapta o ritmo, o nível e o conteúdo a cada aluno individualmente…</div>
+        </div>
+        <span class="card-arrow">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-desc">
+          <p>Os sistemas de tutoria inteligente (ITS — <em>Intelligent Tutoring Systems</em>) conseguem monitorizar em tempo real o desempenho de cada aluno e ajustar dinamicamente a dificuldade, a sequência e o tipo de tarefas. Isso resolve, em parte, o que Benjamin Bloom designou como o <strong>"problema dos 2 sigmas"</strong>: a tutoria individual produz resultados muito superiores ao ensino em grupo, e a IA permite escalar esta personalização.</p>
+          <p>Na prática, isto significa que um aluno que já domina um conceito não perde tempo a repeti-lo, enquanto quem tem dificuldades recebe apoio extra — sem esperar pela atenção do professor.</p>
+        </div>
+        <div class="evidence-block">
+          <div class="evidence-label">
+            <span>Nível de evidência científica</span>
+            <span class="evidence-level level-alto">ALTO</span>
+          </div>
+          <div class="evidence-bar-bg"><div class="evidence-bar-fill fill-van" style="width:90%"></div></div>
+        </div>
+        <div class="studies">
+          <div class="studies-title">Estudos de referência</div>
+          <div class="study-item">
+            <span class="study-dot dot-van"></span>
+            <span><span class="study-year">VanLehn (2011)</span> — Meta-análise de ITS: efeito médio d=0,76 (superior ao ensino em grupo); <em>Educational Psychologist</em>, 46(3).</span>
+          </div>
+          <div class="study-item">
+            <span class="study-dot dot-van"></span>
+            <span><span class="study-year">Ma et al. (2014)</span> — Revisão sistemática com 107 estudos confirma vantagem dos ITS sobre professores e livros em ambientes controlados; <em>Review of Educational Research</em>, 84(3).</span>
+          </div>
+          <div class="study-item">
+            <span class="study-dot dot-van"></span>
+            <span><span class="study-year">Bloom (1984)</span> — "The 2 Sigma Problem": tutoria 1-a-1 supera 98% dos alunos em ensino coletivo; <em>Educational Researcher</em>, 13(6).</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- V2 -->
+    <div class="card" id="v2">
+      <div class="card-header" onclick="toggleCard('v2')">
+        <div class="card-icon icon-van">⚡</div>
+        <div class="card-meta">
+          <div class="card-title">Feedback imediato e contínuo</div>
+          <div class="card-preview">A IA dá resposta instantânea, sem esperar pela correção do professor…</div>
+        </div>
+        <span class="card-arrow">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-desc">
+          <p>O feedback é um dos fatores de maior impacto na aprendizagem. Quando dado imediatamente a seguir à tarefa, ajuda o aluno a corrigir erros antes de os consolidar. Ferramentas de IA conseguem analisar respostas, identificar conceções erradas e sugerir caminhos de melhoria em tempo real — algo impossível num professor que gere 25 alunos ao mesmo tempo.</p>
+          <p>Para além da velocidade, o feedback de IA é <strong>consistente e sem julgamento social</strong> — os alunos errarem sem medo de exposição perante os colegas, o que aumenta a disponibilidade para tentar e falhar.</p>
+        </div>
+        <div class="evidence-block">
+          <div class="evidence-label">
+            <span>Nível de evidência científica</span>
+            <span class="evidence-level level-alto">ALTO</span>
+          </div>
+          <div class="evidence-bar-bg"><div class="evidence-bar-fill fill-van" style="width:88%"></div></div>
+        </div>
+        <div class="studies">
+          <div class="studies-title">Estudos de referência</div>
+          <div class="study-item">
+            <span class="study-dot dot-van"></span>
+            <span><span class="study-year">Hattie & Timperley (2007)</span> — Feedback tem efeito d=0,73 — um dos maiores em educação; <em>Review of Educational Research</em>, 77(1), 81-112.</span>
+          </div>
+          <div class="study-item">
+            <span class="study-dot dot-van"></span>
+            <span><span class="study-year">Nicol & Macfarlane-Dick (2006)</span> — Sete princípios do bom feedback formativo; <em>Studies in Higher Education</em>, 31(2).</span>
+          </div>
+          <div class="study-item">
+            <span class="study-dot dot-van"></span>
+            <span><span class="study-year">Wisniewski et al. (2020)</span> — Meta-análise: feedback com efeito médio d=0,51; <em>Educational Psychology Review</em>, 32.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- V3 -->
+    <div class="card" id="v3">
+      <div class="card-header" onclick="toggleCard('v3')">
+        <div class="card-icon icon-van">♿</div>
+        <div class="card-meta">
+          <div class="card-title">Inclusão e acessibilidade</div>
+          <div class="card-preview">A IA apoia alunos com NEE, dislexia, barreiras linguísticas e outras necessidades…</div>
+        </div>
+        <span class="card-arrow">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-desc">
+          <p>Para alunos com necessidades educativas especiais (NEE), a IA oferece um conjunto de ferramentas que antes eram inacessíveis ou muito caras: <strong>síntese de texto em voz</strong> para alunos com dislexia, <strong>legendagem automática</strong> para surdos, <strong>tradução em tempo real</strong> para alunos de outras línguas, e <strong>comunicação aumentativa</strong> para alunos com dificuldades de fala.</p>
+          <p>O enquadramento do Universal Design for Learning (UDL) defende múltiplas formas de representação e envolvimento — e a IA permite implementar este princípio a escala, sem sobrecarregar o professor.</p>
+        </div>
+        <div class="evidence-block">
+          <div class="evidence-label">
+            <span>Nível de evidência científica</span>
+            <span class="evidence-level level-alto">ALTO</span>
+          </div>
+          <div class="evidence-bar-bg"><div class="evidence-bar-fill fill-van" style="width:82%"></div></div>
+        </div>
+        <div class="studies">
+          <div class="studies-title">Estudos de referência</div>
+          <div class="study-item">
+            <span class="study-dot dot-van"></span>
+            <span><span class="study-year">Rose & Meyer (2002)</span> — Universal Design for Learning: base teórica para tecnologias assistivas na educação; CAST Professional Publishing.</span>
+          </div>
+          <div class="study-item">
+            <span class="study-dot dot-van"></span>
+            <span><span class="study-year">UNESCO (2023)</span> — <em>Guidance for Generative AI in Education and Research</em>: IA como ferramenta de inclusão global.</span>
+          </div>
+          <div class="study-item">
+            <span class="study-dot dot-van"></span>
+            <span><span class="study-year">Florian & Hegarty (2004)</span> — ICT e tecnologia assistiva na educação inclusiva; Open University Press.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- V4 -->
+    <div class="card" id="v4">
+      <div class="card-header" onclick="toggleCard('v4')">
+        <div class="card-icon icon-van">📊</div>
+        <div class="card-meta">
+          <div class="card-title">Identificação precoce de dificuldades</div>
+          <div class="card-preview">Os sistemas de IA analisam padrões de aprendizagem e sinalizam alunos em risco…</div>
+        </div>
+        <span class="card-arrow">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-desc">
+          <p>A <em>learning analytics</em> (análise de dados educativos) permite aos professores identificar, com semanas de antecedência, quais os alunos que estão em risco de insucesso. Sistemas como o EWS (<em>Early Warning Systems</em>) analisam padrões de assiduidade, tempo de resposta, erros recorrentes e trajetórias de desempenho para gerar alertas.</p>
+          <p>Isto transforma a intervenção: em vez de reagir ao insucesso depois de acontecer, o professor pode agir preventivamente. Estudos mostram que este tipo de intervenção <strong>reduz o abandono escolar</strong> e melhora os resultados a longo prazo.</p>
+        </div>
+        <div class="evidence-block">
+          <div class="evidence-label">
+            <span>Nível de evidência científica</span>
+            <span class="evidence-level level-medio">MÉDIO-ALTO</span>
+          </div>
+          <div class="evidence-bar-bg"><div class="evidence-bar-fill fill-amber" style="width:72%"></div></div>
+        </div>
+        <div class="studies">
+          <div class="studies-title">Estudos de referência</div>
+          <div class="study-item">
+            <span class="study-dot dot-van"></span>
+            <span><span class="study-year">Baker & Inventado (2014)</span> — Educational Data Mining e Learning Analytics: estado da arte; <em>Learning Analytics</em>, Springer.</span>
+          </div>
+          <div class="study-item">
+            <span class="study-dot dot-van"></span>
+            <span><span class="study-year">Siemens & Long (2011)</span> — Penetrando a névoa: learning analytics e o futuro da educação superior; <em>EDUCAUSE Review</em>.</span>
+          </div>
+          <div class="study-item">
+            <span class="study-dot dot-van"></span>
+            <span><span class="study-year">Romero & Ventura (2020)</span> — Revisão de Educational Data Mining em 2010-2020; <em>IEEE Transactions on Learning Technologies</em>.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- V5 -->
+    <div class="card" id="v5">
+      <div class="card-header" onclick="toggleCard('v5')">
+        <div class="card-icon icon-van">🌍</div>
+        <div class="card-meta">
+          <div class="card-title">Democratização do acesso ao conhecimento</div>
+          <div class="card-preview">Alunos de regiões remotas acedem a recursos de qualidade global…</div>
+        </div>
+        <span class="card-arrow">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-desc">
+          <p>Um aluno numa aldeia do interior de Portugal, ou numa zona desfavorecida de qualquer país, pode hoje ter acesso a recursos educativos de qualidade equivalente aos de um colégio privado de Lisboa. A IA generativa democratiza o acesso a explicações, tutores virtuais, materiais adaptados e exercícios ilimitados — <strong>sem custo adicional</strong>.</p>
+          <p>Estudos da Khan Academy com a sua ferramenta Khanmigo (baseada em GPT-4) mostraram que alunos sem acesso a professores particulares conseguiram melhorar os resultados com tutoria por IA. Este potencial é especialmente relevante em países em desenvolvimento.</p>
+        </div>
+        <div class="evidence-block">
+          <div class="evidence-label">
+            <span>Nível de evidência científica</span>
+            <span class="evidence-level level-medio">MÉDIO</span>
+          </div>
+          <div class="evidence-bar-bg"><div class="evidence-bar-fill fill-amber" style="width:65%"></div></div>
+        </div>
+        <div class="studies">
+          <div class="studies-title">Estudos de referência</div>
+          <div class="study-item">
+            <span class="study-dot dot-van"></span>
+            <span><span class="study-year">OCDE (2023)</span> — <em>PISA 2022</em>: desigualdades de acesso a recursos digitais de qualidade ainda são marcadas; OECD Publishing.</span>
+          </div>
+          <div class="study-item">
+            <span class="study-dot dot-van"></span>
+            <span><span class="study-year">UNESCO (2019)</span> — <em>Artificial Intelligence in Education</em>: IA como vetor de equidade educativa global.</span>
+          </div>
+          <div class="study-item">
+            <span class="study-dot dot-van"></span>
+            <span><span class="study-year">Luckin et al. (2016)</span> — <em>Intelligence Unleashed</em>: relatório sobre potencial da IA na educação; Pearson Education.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- V6 -->
+    <div class="card" id="v6">
+      <div class="card-header" onclick="toggleCard('v6')">
+        <div class="card-icon icon-van">🔋</div>
+        <div class="card-meta">
+          <div class="card-title">Motivação e envolvimento</div>
+          <div class="card-preview">A gamificação e o feedback imediato aumentam a motivação intrínseca…</div>
+        </div>
+        <span class="card-arrow">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-desc">
+          <p>Plataformas como a Duolingo, Khan Academy e Quizlet usam IA para criar experiências com elementos de jogo — pontos, níveis, desafios, recompensas — que mantêm os alunos envolvidos por mais tempo. A <strong>teoria da autodeterminação</strong> de Deci & Ryan explica porquê: quando as tarefas são desafiantes mas atingíveis (zona de desenvolvimento proximal de Vygotsky), a motivação intrínseca aumenta.</p>
+          <p>A IA consegue manter o aluno permanentemente nessa zona ideal — nem demasiado fácil (aborrecimento) nem demasiado difícil (ansiedade). Isto é conhecido como o estado de <em>flow</em> descrito por Csikszentmihalyi.</p>
+        </div>
+        <div class="evidence-block">
+          <div class="evidence-label">
+            <span>Nível de evidência científica</span>
+            <span class="evidence-level level-medio">MÉDIO</span>
+          </div>
+          <div class="evidence-bar-bg"><div class="evidence-bar-fill fill-amber" style="width:68%"></div></div>
+        </div>
+        <div class="studies">
+          <div class="studies-title">Estudos de referência</div>
+          <div class="study-item">
+            <span class="study-dot dot-van"></span>
+            <span><span class="study-year">Deci & Ryan (2000)</span> — Self-Determination Theory: autonomia e competência como motores da motivação; <em>Psychological Inquiry</em>, 11(4).</span>
+          </div>
+          <div class="study-item">
+            <span class="study-dot dot-van"></span>
+            <span><span class="study-year">Hamari et al. (2014)</span> — Meta-análise sobre gamificação e envolvimento em contexto educativo; <em>Proceedings HICSS</em>.</span>
+          </div>
+          <div class="study-item">
+            <span class="study-dot dot-van"></span>
+            <span><span class="study-year">Scherer et al. (2019)</span> — Tecnologia, motivação e aprendizagem: revisão de 140 estudos; <em>Educational Research Review</em>.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- V7 -->
+    <div class="card" id="v7">
+      <div class="card-header" onclick="toggleCard('v7')">
+        <div class="card-icon icon-van">🧩</div>
+        <div class="card-meta">
+          <div class="card-title">Apoio à pedagogia diferenciada</div>
+          <div class="card-preview">O professor ganha ferramentas para diversificar sem triplicar o trabalho…</div>
+        </div>
+        <span class="card-arrow">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-desc">
+          <p>Numa turma de 25 alunos com níveis, ritmos e perfis de aprendizagem muito diferentes, é humanamente impossível o professor criar materiais, exercícios e avaliações diferenciadas para cada aluno. A IA pode gerar <strong>múltiplas versões de uma tarefa</strong> — mais simples, mais complexa, com suporte visual, com linguagem simplificada — em segundos.</p>
+          <p>Ferramentas como MagicSchool, Diffit ou o próprio ChatGPT permitem ao professor selecionar conteúdo curricular e obter versões diferenciadas automaticamente, libertando tempo para o que mais importa: a relação humana e a orientação.</p>
+        </div>
+        <div class="evidence-block">
+          <div class="evidence-label">
+            <span>Nível de evidência científica</span>
+            <span class="evidence-level level-medio">MÉDIO</span>
+          </div>
+          <div class="evidence-bar-bg"><div class="evidence-bar-fill fill-amber" style="width:70%"></div></div>
+        </div>
+        <div class="studies">
+          <div class="studies-title">Estudos de referência</div>
+          <div class="study-item">
+            <span class="study-dot dot-van"></span>
+            <span><span class="study-year">Tomlinson (2001)</span> — <em>How to Differentiate Instruction in Mixed-Ability Classrooms</em>: base pedagógica da diferenciação; ASCD.</span>
+          </div>
+          <div class="study-item">
+            <span class="study-dot dot-van"></span>
+            <span><span class="study-year">Hattie (2009)</span> — <em>Visible Learning</em>: meta-análise de 800+ estudos; efeito da diferenciação d=0,41; Routledge.</span>
+          </div>
+          <div class="study-item">
+            <span class="study-dot dot-van"></span>
+            <span><span class="study-year">Zawacki-Richter et al. (2019)</span> — Revisão sistemática de IA na ensino superior; <em>International Journal of Educational Technology</em>.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- V8 -->
+    <div class="card" id="v8">
+      <div class="card-header" onclick="toggleCard('v8')">
+        <div class="card-icon icon-van">🕐</div>
+        <div class="card-meta">
+          <div class="card-title">Disponibilidade permanente (24/7)</div>
+          <div class="card-preview">A IA está sempre disponível, independentemente do fuso horário ou do dia…</div>
+        </div>
+        <span class="card-arrow">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-desc">
+          <p>Um tutor humano tem horário, cansa-se e não está disponível às 23h quando o aluno está a estudar para um teste. A IA não tem estas limitações. Estudar pode acontecer quando o aluno está mais concentrado, sem depender da disponibilidade do professor ou de um explicador.</p>
+          <p>Isto é especialmente valioso para alunos cujas famílias não têm condições económicas para pagar aulas de apoio, ou que vivem em zonas com menos recursos educativos. A IA democratiza o acesso ao apoio extra que antes era exclusivo de quem podia pagar.</p>
+        </div>
+        <div class="evidence-block">
+          <div class="evidence-label">
+            <span>Nível de evidência científica</span>
+            <span class="evidence-level level-medio">MÉDIO</span>
+          </div>
+          <div class="evidence-bar-bg"><div class="evidence-bar-fill fill-amber" style="width:62%"></div></div>
+        </div>
+        <div class="studies">
+          <div class="studies-title">Estudos de referência</div>
+          <div class="study-item">
+            <span class="study-dot dot-van"></span>
+            <span><span class="study-year">Holmes et al. (2019)</span> — <em>Artificial Intelligence in Education</em>: livro de referência sobre oportunidades e desafios; MIT Press.</span>
+          </div>
+          <div class="study-item">
+            <span class="study-dot dot-van"></span>
+            <span><span class="study-year">Popenici & Kerr (2017)</span> — IA na educação: implicações para ensino, aprendizagem e futuro da escolaridade; <em>Higher Education Research & Development</em>.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- V9 -->
+    <div class="card" id="v9">
+      <div class="card-header" onclick="toggleCard('v9')">
+        <div class="card-icon icon-van">💻</div>
+        <div class="card-meta">
+          <div class="card-title">Desenvolvimento de literacia digital</div>
+          <div class="card-preview">Trabalhar com IA é uma competência essencial para o século XXI…</div>
+        </div>
+        <span class="card-arrow">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-desc">
+          <p>O relatório <em>Future of Jobs</em> do Fórum Económico Mundial identifica o pensamento crítico, a resolução de problemas complexos e a literacia digital como as competências mais exigidas no mercado de trabalho de 2030. Aprender a usar ferramentas de IA com sentido crítico — saber interrogar, verificar e contextualizar os resultados — é uma <strong>competência fundamental do século XXI</strong>.</p>
+          <p>O DigComp 3.0 da União Europeia define cinco áreas de competência digital, e a interação com sistemas de IA está presente em todas elas. As escolas que integram a IA de forma reflexiva estão a preparar os alunos para um mundo em que esta tecnologia será omnipresente.</p>
+        </div>
+        <div class="evidence-block">
+          <div class="evidence-label">
+            <span>Nível de evidência científica</span>
+            <span class="evidence-level level-medio">MÉDIO-ALTO</span>
+          </div>
+          <div class="evidence-bar-bg"><div class="evidence-bar-fill fill-van" style="width:75%"></div></div>
+        </div>
+        <div class="studies">
+          <div class="studies-title">Estudos de referência</div>
+          <div class="study-item">
+            <span class="study-dot dot-van"></span>
+            <span><span class="study-year">Carretero et al. (2022)</span> — <em>DigComp 3.0: The Digital Competence Framework for Citizens</em>; Comissão Europeia, Publications Office of the EU.</span>
+          </div>
+          <div class="study-item">
+            <span class="study-dot dot-van"></span>
+            <span><span class="study-year">WEF (2023)</span> — <em>Future of Jobs Report 2023</em>: literacia em IA entre as 10 competências mais procuradas; World Economic Forum.</span>
+          </div>
+          <div class="study-item">
+            <span class="study-dot dot-van"></span>
+            <span><span class="study-year">Selwyn (2022)</span> — <em>Education and Technology</em>: desafios de preparar alunos para um mundo dominado por IA; Bloomsbury.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- V10 -->
+    <div class="card" id="v10">
+      <div class="card-header" onclick="toggleCard('v10')">
+        <div class="card-icon icon-van">👩‍🏫</div>
+        <div class="card-meta">
+          <div class="card-title">Libertação do professor para o que importa</div>
+          <div class="card-preview">A IA trata das tarefas repetitivas, o professor foca-se na relação humana…</div>
+        </div>
+        <span class="card-arrow">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-desc">
+          <p>Estudos indicam que os professores gastam entre 30% a 40% do seu tempo em tarefas administrativas — correção de fichas, elaboração de relatórios, planificações repetitivas. A IA pode automatizar grande parte destas tarefas, devolvendo tempo ao professor para <strong>interagir, orientar, motivar e criar vínculos</strong> com os alunos.</p>
+          <p>A relação professor-aluno continua a ser um dos preditores mais poderosos do sucesso educativo. Paradoxalmente, a IA pode fortalecer esta relação ao libertar o professor das tarefas mecânicas.</p>
+        </div>
+        <div class="evidence-block">
+          <div class="evidence-label">
+            <span>Nível de evidência científica</span>
+            <span class="evidence-level level-medio">MÉDIO</span>
+          </div>
+          <div class="evidence-bar-bg"><div class="evidence-bar-fill fill-amber" style="width:67%"></div></div>
+        </div>
+        <div class="studies">
+          <div class="studies-title">Estudos de referência</div>
+          <div class="study-item">
+            <span class="study-dot dot-van"></span>
+            <span><span class="study-year">Manyika et al. (2017)</span> — <em>A Future That Works: Automation, Employment, and Productivity</em>: 30-40% do trabalho docente é automatizável; McKinsey Global Institute.</span>
+          </div>
+          <div class="study-item">
+            <span class="study-dot dot-van"></span>
+            <span><span class="study-year">Pianta et al. (2008)</span> — Relação professor-aluno como preditor do sucesso; <em>Handbook of Child Development</em>.</span>
+          </div>
+          <div class="study-item">
+            <span class="study-dot dot-van"></span>
+            <span><span class="study-year">Hattie (2009)</span> — Relação professor-aluno: efeito d=0,52 na aprendizagem; <em>Visible Learning</em>, Routledge.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /cards-grid vantagens -->
+</div><!-- /tab-van -->
+
+
+<!-- ============================================================
+     DESVANTAGENS
+     ============================================================ -->
+<div id="tab-des" class="tab-content">
+  <div class="section-header">
+    <span class="section-badge badge-des">✗ Desvantagens · 10 dimensões</span>
+    <h2 class="section-title">Os riscos e limitações que os estudos identificam</h2>
+    <p class="section-desc">A investigação científica também documenta efeitos negativos, riscos e limitações que exigem atenção crítica.</p>
+  </div>
+
+  <div class="cards-grid">
+
+    <!-- D1 -->
+    <div class="card" id="d1">
+      <div class="card-header" onclick="toggleCard('d1')">
+        <div class="card-icon icon-des">🧠</div>
+        <div class="card-meta">
+          <div class="card-title">Risco de dependência e erosão do pensamento crítico</div>
+          <div class="card-preview">Se a IA responde por nós, deixamos de desenvolver a capacidade de pensar…</div>
+        </div>
+        <span class="card-arrow">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-desc">
+          <p>O "efeito Google" — documentado por Sparrow et al. (2011) — mostra que sabemos que podemos aceder a uma informação online tendemos a não a memorizar. Com a IA generativa, este fenómeno intensifica-se: se um aluno sabe que pode pedir à IA para resolver um problema, o cérebro pode desativar o esforço cognitivo necessário para aprender.</p>
+          <p>A aprendizagem profunda requer <strong>luta cognitiva</strong> (<em>desirable difficulty</em> de Robert Bjork). Quando a IA elimina essa luta, pode estar a eliminar o processo que consolida o conhecimento a longo prazo. Estudantes que usam IA para produzir textos sem pensar criticamente estão a contornar o processo que desenvolve o pensamento.</p>
+        </div>
+        <div class="evidence-block">
+          <div class="evidence-label">
+            <span>Nível de evidência científica</span>
+            <span class="evidence-level level-alto">ALTO</span>
+          </div>
+          <div class="evidence-bar-bg"><div class="evidence-bar-fill fill-des" style="width:85%"></div></div>
+        </div>
+        <div class="studies">
+          <div class="studies-title">Estudos de referência</div>
+          <div class="study-item">
+            <span class="study-dot dot-des"></span>
+            <span><span class="study-year">Sparrow et al. (2011)</span> — "Google Effect": confiança em fontes externas reduz a retenção em memória; <em>Science</em>, 333(6043).</span>
+          </div>
+          <div class="study-item">
+            <span class="study-dot dot-des"></span>
+            <span><span class="study-year">Bjork & Bjork (2011)</span> — <em>Desirable difficulties</em>: dificuldade desejável no processo de aprendizagem; <em>Psychology of Learning and Motivation</em>.</span>
+          </div>
+          <div class="study-item">
+            <span class="study-dot dot-des"></span>
+            <span><span class="study-year">Warschauer et al. (2023)</span> — Impacto dos LLMs no pensamento dos estudantes: primeiros estudos empíricos; <em>Computers & Education</em>.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- D2 -->
+    <div class="card" id="d2">
+      <div class="card-header" onclick="toggleCard('d2')">
+        <div class="card-icon icon-des">🔐</div>
+        <div class="card-meta">
+          <div class="card-title">Privacidade dos dados e vigilância digital</div>
+          <div class="card-preview">Os dados dos menores são recolhidos em larga escala, com riscos sérios…</div>
+        </div>
+        <span class="card-arrow">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-desc">
+          <p>Sistemas de IA em contexto educativo recolhem enormes quantidades de dados: respostas, tempo de reação, padrões de erro, comportamentos, preferências. Quando se trata de <strong>menores de 18 anos</strong>, as implicações éticas e legais são especialmente graves. O RGPD (Regulamento Geral de Proteção de Dados) da União Europeia exige consentimento explícito e proteção reforçada para dados de crianças.</p>
+          <p>Há também o risco de <em>data profiling</em>: sistemas que analisam o comportamento escolar podem gerar perfis que acompanham os alunos durante décadas, influenciando oportunidades futuras com base em dados recolhidos quando eram crianças.</p>
+        </div>
+        <div class="evidence-block">
+          <div class="evidence-label">
+            <span>Nível de evidência científica</span>
+            <span class="evidence-level level-alto">ALTO</span>
+          </div>
+          <div class="evidence-bar-bg"><div class="evidence-bar-fill fill-des" style="width:88%"></div></div>
+        </div>
+        <div class="studies">
+          <div class="studies-title">Estudos de referência</div>
+          <div class="study-item">
+            <span class="study-dot dot-des"></span>
+            <span><span class="study-year">Williamson et al. (2020)</span> — Vigilância digital na educação: implicações de uma infraestrutura de dados educativos; <em>Learning, Media and Technology</em>.</span>
+          </div>
+          <div class="study-item">
+            <span class="study-dot dot-des"></span>
+            <span><span class="study-year">EU (2018)</span> — Regulamento Geral de Proteção de Dados (RGPD): Artigo 8.º — proteção especial de dados de crianças; Jornal Oficial da UE.</span>
+          </div>
+          <div class="study-item">
+            <span class="study-dot dot-des"></span>
+            <span><span class="study-year">Selwyn (2019)</span> — <em>Should Robots Replace Teachers?</em>: privacidade e poder em sistemas educativos digitais; Polity Press.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- D3 -->
+    <div class="card" id="d3">
+      <div class="card-header" onclick="toggleCard('d3')">
+        <div class="card-icon icon-des">⚖️</div>
+        <div class="card-meta">
+          <div class="card-title">Vieses algorítmicos e discriminação</div>
+          <div class="card-preview">Os algoritmos podem perpetuar e amplificar desigualdades existentes…</div>
+        </div>
+        <span class="card-arrow">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-desc">
+          <p>Os sistemas de IA são treinados em dados históricos — e se esses dados refletem desigualdades (género, etnia, classe social), o modelo pode perpetuá-las e amplificá-las. Um sistema de avaliação automática treinado maioritariamente com textos de estudantes de classe média pode penalizar formas de escrita de grupos culturalmente distintos.</p>
+          <p>Casos documentados mostram que sistemas de IA utilizados em contexto educativo <strong>avaliaram pior alunos de grupos minoritários</strong>, não por falta de competência, mas por enviesamento dos dados de treino. A neutralidade da IA é um mito: ela replica e amplifica os preconceitos do seu criador.</p>
+        </div>
+        <div class="evidence-block">
+          <div class="evidence-label">
+            <span>Nível de evidência científica</span>
+            <span class="evidence-level level-alto">ALTO</span>
+          </div>
+          <div class="evidence-bar-bg"><div class="evidence-bar-fill fill-des" style="width:87%"></div></div>
+        </div>
+        <div class="studies">
+          <div class="studies-title">Estudos de referência</div>
+          <div class="study-item">
+            <span class="study-dot dot-des"></span>
+            <span><span class="study-year">Noble (2018)</span> — <em>Algorithms of Oppression</em>: como motores de busca reforçam o racismo; NYU Press.</span>
+          </div>
+          <div class="study-item">
+            <span class="study-dot dot-des"></span>
+            <span><span class="study-year">Eubanks (2018)</span> — <em>Automating Inequality</em>: como sistemas automatizados discriminam os mais vulneráveis; St. Martin's Press.</span>
+          </div>
+          <div class="study-item">
+            <span class="study-dot dot-des"></span>
+            <span><span class="study-year">Obermeyer et al. (2019)</span> — Enviesamento racial em sistemas algorítmicos; <em>Science</em>, 366(6464). [aplicável à educação]</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- D4 -->
+    <div class="card" id="d4">
+      <div class="card-header" onclick="toggleCard('d4')">
+        <div class="card-icon icon-des">📝</div>
+        <div class="card-meta">
+          <div class="card-title">Integridade académica e plágio</div>
+          <div class="card-preview">A IA torna mais fácil submeter trabalho que não é nosso como se fosse…</div>
+        </div>
+        <span class="card-arrow">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-desc">
+          <p>A IA generativa criou uma crise de integridade académica sem precedentes. Um aluno pode pedir ao ChatGPT que escreva o seu ensaio, resolva os seus problemas de matemática ou responda às questões de avaliação — e o resultado pode ser indistinguível de trabalho feito pelo próprio. Os detetores de texto de IA ainda são pouco fiáveis e facilmente contornáveis.</p>
+          <p>Para além do impacto imediato na avaliação, há um <strong>problema pedagógico profundo</strong>: o aluno que não fez o trabalho não desenvolveu as competências que esse trabalho se destinava a desenvolver. O sucesso nas notas mascara a ausência de aprendizagem real.</p>
+        </div>
+        <div class="evidence-block">
+          <div class="evidence-label">
+            <span>Nível de evidência científica</span>
+            <span class="evidence-level level-alto">ALTO</span>
+          </div>
+          <div class="evidence-bar-bg"><div class="evidence-bar-fill fill-des" style="width:90%"></div></div>
+        </div>
+        <div class="studies">
+          <div class="studies-title">Estudos de referência</div>
+          <div class="study-item">
+            <span class="study-dot dot-des"></span>
+            <span><span class="study-year">Cotton et al. (2023)</span> — ChatGPT em educação superior: desafios de integridade académica; <em>Innovations in Education and Teaching International</em>, 60(1).</span>
+          </div>
+          <div class="study-item">
+            <span class="study-dot dot-des"></span>
+            <span><span class="study-year">Stokel-Walker (2023)</span> — ChatGPT listado como co-autor em artigos científicos; <em>Nature</em>, 613.</span>
+          </div>
+          <div class="study-item">
+            <span class="study-dot dot-des"></span>
+            <span><span class="study-year">Guo et al. (2023)</span> — Detetores de texto de IA têm altas taxas de falsos positivos e negativos; <em>arXiv preprint</em>.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- D5 -->
+    <div class="card" id="d5">
+      <div class="card-header" onclick="toggleCard('d5')">
+        <div class="card-icon icon-des">🌐</div>
+        <div class="card-meta">
+          <div class="card-title">Fosso digital e agravamento das desigualdades</div>
+          <div class="card-preview">Nem todos os alunos têm acesso igual a dispositivos e Internet de qualidade…</div>
+        </div>
+        <span class="card-arrow">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-desc">
+          <p>A integração de IA na educação pode paradoxalmente aumentar as desigualdades. Alunos com acesso a dispositivos modernos, Internet rápida e literacia digital beneficiam das vantagens da IA — enquanto os que não têm ficam ainda mais para trás. Estudos pós-COVID mostraram que <strong>o fosso digital afetou desproporcionalmente alunos de famílias de baixo rendimento e zonas rurais</strong>.</p>
+          <p>Em Portugal, o relatório PISA 2022 indica que as desigualdades socioeconómicas no desempenho escolar permanecem elevadas. Uma política de IA educativa que não endereça explicitamente o acesso equitativo pode aprofundar estas assimetrias.</p>
+        </div>
+        <div class="evidence-block">
+          <div class="evidence-label">
+            <span>Nível de evidência científica</span>
+            <span class="evidence-level level-alto">ALTO</span>
+          </div>
+          <div class="evidence-bar-bg"><div class="evidence-bar-fill fill-des" style="width:86%"></div></div>
+        </div>
+        <div class="studies">
+          <div class="studies-title">Estudos de referência</div>
+          <div class="study-item">
+            <span class="study-dot dot-des"></span>
+            <span><span class="study-year">OCDE (2021)</span> — <em>21st-Century Readers</em>: fosso digital e literacia; OECD Publishing, Paris.</span>
+          </div>
+          <div class="study-item">
+            <span class="study-dot dot-des"></span>
+            <span><span class="study-year">OCDE (2023)</span> — <em>PISA 2022 Results</em>: desigualdades de acesso digital persistem; OECD Publishing.</span>
+          </div>
+          <div class="study-item">
+            <span class="study-dot dot-des"></span>
+            <span><span class="study-year">van Dijk (2020)</span> — <em>The Digital Divide</em>: quatro tipos de acesso desigual à tecnologia; Polity Press.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- D6 -->
+    <div class="card" id="d6">
+      <div class="card-header" onclick="toggleCard('d6')">
+        <div class="card-icon icon-des">💬</div>
+        <div class="card-meta">
+          <div class="card-title">Impacto nas competências socioemocionais</div>
+          <div class="card-preview">A substituição da interação humana por IA empobrece o desenvolvimento social…</div>
+        </div>
+        <span class="card-arrow">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-desc">
+          <p>A escola não serve apenas para transmitir conhecimento — é um espaço fundamental de <strong>socialização, construção de identidade e desenvolvimento emocional</strong>. A interação com colegas e professores ensina empatia, resolução de conflitos, colaboração e comunicação. Quando um aluno substitui estas interações por conversas com um chatbot, pode estar a empobrecer o seu desenvolvimento socioemocional.</p>
+          <p>Daniel Goleman demonstrou que a inteligência emocional é tão ou mais preditora do sucesso a longo prazo do que o QI. Estas competências desenvolvem-se através da experiência relacional humana — algo que a IA não pode substituir.</p>
+        </div>
+        <div class="evidence-block">
+          <div class="evidence-label">
+            <span>Nível de evidência científica</span>
+            <span class="evidence-level level-medio">MÉDIO-ALTO</span>
+          </div>
+          <div class="evidence-bar-bg"><div class="evidence-bar-fill fill-des" style="width:75%"></div></div>
+        </div>
+        <div class="studies">
+          <div class="studies-title">Estudos de referência</div>
+          <div class="study-item">
+            <span class="study-dot dot-des"></span>
+            <span><span class="study-year">Goleman (1995)</span> — <em>Emotional Intelligence</em>: inteligência emocional como preditor do sucesso; Bantam Books.</span>
+          </div>
+          <div class="study-item">
+            <span class="study-dot dot-des"></span>
+            <span><span class="study-year">Twenge et al. (2018)</span> — Uso de écran e bem-estar adolescente: meta-análise; <em>Psychological Science</em>, 29(3).</span>
+          </div>
+          <div class="study-item">
+            <span class="study-dot dot-des"></span>
+            <span><span class="study-year">CASEL (2021)</span> — Framework de Aprendizagem Socioemocional: competências que a escola deve desenvolver; Collaborative for Academic, Social and Emotional Learning.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- D7 -->
+    <div class="card" id="d7">
+      <div class="card-header" onclick="toggleCard('d7')">
+        <div class="card-icon icon-des">🎭</div>
+        <div class="card-meta">
+          <div class="card-title">Desinformação e "alucinações" da IA</div>
+          <div class="card-preview">A IA pode inventar factos com confiança, enganando alunos sem sentido crítico…</div>
+        </div>
+        <span class="card-arrow">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-desc">
+          <p>Os modelos de linguagem de grande escala (LLMs) como o ChatGPT não verificam factos — geram texto estatisticamente plausível. Quando não sabem a resposta, tendem a inventar referências, datas, nomes e factos com total confiança. Este fenómeno, chamado <em>hallucination</em>, é especialmente perigoso em contexto educativo.</p>
+          <p>Um aluno que usa IA para fazer pesquisa e não tem ferramentas para verificar a informação pode aprender factos errados e referenciá-los em trabalhos escolares. Isto exige que a escola desenvolva ativamente competências de <strong>verificação de informação e pensamento crítico</strong> — ironicamente, a principal antídoto contra o mau uso da IA.</p>
+        </div>
+        <div class="evidence-block">
+          <div class="evidence-label">
+            <span>Nível de evidência científica</span>
+            <span class="evidence-level level-alto">ALTO</span>
+          </div>
+          <div class="evidence-bar-bg"><div class="evidence-bar-fill fill-des" style="width:91%"></div></div>
+        </div>
+        <div class="studies">
+          <div class="studies-title">Estudos de referência</div>
+          <div class="study-item">
+            <span class="study-dot dot-des"></span>
+            <span><span class="study-year">Ji et al. (2023)</span> — Survey on Hallucination in Natural Language Generation: revisão sistemática; <em>ACM Computing Surveys</em>, 55(12).</span>
+          </div>
+          <div class="study-item">
+            <span class="study-dot dot-des"></span>
+            <span><span class="study-year">Maynez et al. (2020)</span> — Fidelidade e factualidade em geração de linguagem; <em>Proceedings ACL 2020</em>.</span>
+          </div>
+          <div class="study-item">
+            <span class="study-dot dot-des"></span>
+            <span><span class="study-year">Wineburg & McGrew (2019)</span> — Pensamento lateral e verificação de factos: como adultos (e jovens) falham; <em>Journal of Educational Psychology</em>, 111(8).</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- D8 -->
+    <div class="card" id="d8">
+      <div class="card-header" onclick="toggleCard('d8')">
+        <div class="card-icon icon-des">💭</div>
+        <div class="card-meta">
+          <div class="card-title">Impacto no desenvolvimento cognitivo profundo</div>
+          <div class="card-preview">Dificuldades que são contornadas por IA deixam de contribuir para aprender…</div>
+        </div>
+        <span class="card-arrow">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-desc">
+          <p>A aprendizagem profunda acontece quando o cérebro enfrenta dificuldades e as supera. A investigação em ciências cognitivas mostra que o esforço de recuperar informação da memória (<em>retrieval practice</em>), de resolver problemas sem ajuda (<em>generation effect</em>) e de errar e corrigir são fundamentais para consolidar o conhecimento a longo prazo.</p>
+          <p>Quando a IA elimina a fase de esforço — dando a resposta antes que o aluno tente —, pode estar a impedir a consolidação. O paradoxo: <strong>aprender é mais difícil sem IA, mas aprender-se-á mais profundamente</strong>. O desafio pedagógico é encontrar o equilíbrio.</p>
+        </div>
+        <div class="evidence-block">
+          <div class="evidence-label">
+            <span>Nível de evidência científica</span>
+            <span class="evidence-level level-alto">ALTO</span>
+          </div>
+          <div class="evidence-bar-bg"><div class="evidence-bar-fill fill-des" style="width:83%"></div></div>
+        </div>
+        <div class="studies">
+          <div class="studies-title">Estudos de referência</div>
+          <div class="study-item">
+            <span class="study-dot dot-des"></span>
+            <span><span class="study-year">Roediger & Karpicke (2006)</span> — <em>Retrieval practice</em> produz mais aprendizagem que reler; <em>Psychological Science</em>, 17(3).</span>
+          </div>
+          <div class="study-item">
+            <span class="study-dot dot-des"></span>
+            <span><span class="study-year">Make It Stick (Brown et al., 2014)</span> — Ciência da aprendizagem: dificuldade desejável e prática de recuperação; Harvard University Press.</span>
+          </div>
+          <div class="study-item">
+            <span class="study-dot dot-des"></span>
+            <span><span class="study-year">Kapur (2016)</span> — <em>Productive failure</em>: errar antes de aprender consolida melhor o conhecimento; <em>Educational Psychologist</em>, 51(2).</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- D9 -->
+    <div class="card" id="d9">
+      <div class="card-header" onclick="toggleCard('d9')">
+        <div class="card-icon icon-des">📱</div>
+        <div class="card-meta">
+          <div class="card-title">Bem-estar, saúde mental e tempo de ecrã</div>
+          <div class="card-preview">O excesso de tempo em ecrãs correlaciona-se com ansiedade e depressão adolescente…</div>
+        </div>
+        <span class="card-arrow">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-desc">
+          <p>A integração crescente de ferramentas digitais e de IA na educação tende a aumentar o tempo que os jovens passam em frente a ecrãs. A investigação de Twenge, Haidt e outros associa o aumento do tempo de ecrã (especialmente em smartphones) a um aumento da ansiedade, depressão e solidão em adolescentes desde o início dos anos 2010.</p>
+          <p>A OMS recomenda limites de tempo de ecrã para crianças e jovens. A escola precisa de equilibrar os benefícios pedagógicos da IA com a <strong>proteção do bem-estar físico e mental</strong> dos alunos — incluindo a importância do sono, do movimento e da interação presencial.</p>
+        </div>
+        <div class="evidence-block">
+          <div class="evidence-label">
+            <span>Nível de evidência científica</span>
+            <span class="evidence-level level-medio">MÉDIO-ALTO</span>
+          </div>
+          <div class="evidence-bar-bg"><div class="evidence-bar-fill fill-des" style="width:76%"></div></div>
+        </div>
+        <div class="studies">
+          <div class="studies-title">Estudos de referência</div>
+          <div class="study-item">
+            <span class="study-dot dot-des"></span>
+            <span><span class="study-year">Twenge & Campbell (2019)</span> — Aumento do tempo de ecrã e deterioração do bem-estar em adolescentes; <em>JAMA Pediatrics</em>.</span>
+          </div>
+          <div class="study-item">
+            <span class="study-dot dot-des"></span>
+            <span><span class="study-year">Haidt & Allen (2020)</span> — Redes sociais, ecrãs e saúde mental dos adolescentes: revisão crítica; <em>Psychological Bulletin</em>.</span>
+          </div>
+          <div class="study-item">
+            <span class="study-dot dot-des"></span>
+            <span><span class="study-year">WHO (2019)</span> — <em>Guidelines on Physical Activity, Sedentary Behaviour and Sleep for Children Under 5 Years of Age</em>; World Health Organization.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- D10 -->
+    <div class="card" id="d10">
+      <div class="card-header" onclick="toggleCard('d10')">
+        <div class="card-icon icon-des">🏫</div>
+        <div class="card-meta">
+          <div class="card-title">Professores não preparados e risco de má integração</div>
+          <div class="card-preview">Sem formação adequada, a IA pode ser usada de formas que prejudicam a aprendizagem…</div>
+        </div>
+        <span class="card-arrow">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-desc">
+          <p>A eficácia de qualquer tecnologia educativa depende da qualidade da integração pedagógica. Se o professor não foi formado para usar a IA de forma crítica e intencional, corre o risco de a usar como substituto do ensino — em vez de como ferramenta de apoio. Estudos do TALIS (OCDE) mostram que uma parte significativa dos professores se sente <strong>pouco preparada para integrar tecnologia digital</strong> nas suas aulas.</p>
+          <p>Há também o risco de deslumbramento tecnológico: usar IA apenas para parecer moderno, sem reflexão sobre se está a servir a aprendizagem. A tecnologia sem pedagogia pode ser um desperdício de recursos e tempo.</p>
+        </div>
+        <div class="evidence-block">
+          <div class="evidence-label">
+            <span>Nível de evidência científica</span>
+            <span class="evidence-level level-medio">MÉDIO-ALTO</span>
+          </div>
+          <div class="evidence-bar-bg"><div class="evidence-bar-fill fill-des" style="width:78%"></div></div>
+        </div>
+        <div class="studies">
+          <div class="studies-title">Estudos de referência</div>
+          <div class="study-item">
+            <span class="study-dot dot-des"></span>
+            <span><span class="study-year">OCDE TALIS (2023)</span> — Teaching and Learning International Survey: 40% dos professores sentem-se pouco preparados para usar tecnologia; OECD Publishing.</span>
+          </div>
+          <div class="study-item">
+            <span class="study-dot dot-des"></span>
+            <span><span class="study-year">Voogt & Roblin (2012)</span> — Competências do século XXI em currículos escolares: revisão comparativa; <em>Journal of Curriculum Studies</em>.</span>
+          </div>
+          <div class="study-item">
+            <span class="study-dot dot-des"></span>
+            <span><span class="study-year">Ertmer et al. (2012)</span> — Crenças dos professores e integração da tecnologia: barreiras persistentes; <em>Journal of Research on Technology in Education</em>, 45(1).</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /cards-grid desvantagens -->
+</div><!-- /tab-des -->
+
+
+<!-- ============================================================
+     SÍNTESE
+     ============================================================ -->
+<div id="tab-syn" class="tab-content">
+  <div class="section-header">
+    <span class="section-badge badge-syn">⊙ Síntese · O quadro completo</span>
+    <h2 class="section-title">O que os estudos nos dizem no seu conjunto</h2>
+    <p class="section-desc">Nenhuma tecnologia é boa ou má por si mesma. O que importa é como e para quê a usamos.</p>
+  </div>
+
+  <div class="syn-grid">
+    <div class="syn-card van-card">
+      <div class="syn-num">10</div>
+      <div class="syn-label">Dimensões positivas identificadas</div>
+      <div class="syn-sub">Personalização · Feedback · Inclusão · Motivação · Literacia digital · Diferenciação · Acesso · Identificação precoce · Disponibilidade · Libertação docente</div>
+    </div>
+    <div class="syn-card des-card">
+      <div class="syn-num">10</div>
+      <div class="syn-label">Riscos e limitações documentados</div>
+      <div class="syn-sub">Dependência · Privacidade · Vieses · Plágio · Desigualdade · Isolamento · Desinformação · Cognição · Bem-estar · Formação docente</div>
+    </div>
+  </div>
+
+  <!-- BALANCE -->
+  <div class="balance-section">
+    <div class="balance-title">Onde a evidência é mais forte?</div>
+    <p style="font-size:13px;color:var(--neutral-mid);margin-bottom:1rem;">A evidência científica é forte dos dois lados — mas com padrões diferentes</p>
+    <div class="balance-visual">
+      <div class="balance-side" style="text-align:center">
+        <div class="balance-bar bar-van">Vantagens</div>
+        <div class="balance-label" style="color:var(--van)">Maior evidência em:</div>
+        <div style="font-size:12px;color:var(--neutral-mid);margin-top:4px">Feedback · Personalização<br>Inclusão · Vieses</div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:8px">
+        <div style="font-size:1.5rem;color:var(--neutral-mid)">⚖</div>
+      </div>
+      <div class="balance-side" style="text-align:center">
+        <div class="balance-bar bar-des">Riscos</div>
+        <div class="balance-label" style="color:var(--des)">Maior evidência em:</div>
+        <div style="font-size:12px;color:var(--neutral-mid);margin-top:4px">Dependência · Privacidade<br>Plágio · Desinformação</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAKEAWAYS -->
+  <div class="takeaways">
+    <div style="font-family:Georgia,serif;font-size:1.2rem;margin-bottom:1rem;color:var(--neutral)">O que os estudos concluem de forma transversal</div>
+
+    <div class="takeaway-item">
+      <div class="takeaway-icon">🔬</div>
+      <div class="takeaway-text"><strong>A IA funciona melhor como suplemento do que como substituto.</strong> A investigação mostra que os melhores resultados surgem quando a IA apoia o professor humano — não quando o substitui. A relação pedagógica humana continua a ser insubstituível.</div>
+    </div>
+    <div class="takeaway-item">
+      <div class="takeaway-icon">⚠️</div>
+      <div class="takeaway-text"><strong>Os riscos afetam desproporcionalmente os mais vulneráveis.</strong> O fosso digital, os vieses algorítmicos e a falta de literacia crítica impactam mais os alunos de grupos socioeconómicos desfavorecidos. Uma integração descuidada pode aumentar as desigualdades.</div>
+    </div>
+    <div class="takeaway-item">
+      <div class="takeaway-icon">🧩</div>
+      <div class="takeaway-text"><strong>O pensamento crítico é o antídoto e o objetivo.</strong> A capacidade de questionar, verificar e contextualizar o que a IA produz é simultaneamente a principal defesa contra os seus riscos e a competência mais valiosa que a escola pode desenvolver.</div>
+    </div>
+    <div class="takeaway-item">
+      <div class="takeaway-icon">🎓</div>
+      <div class="takeaway-text"><strong>A formação dos professores é a variável mais crítica.</strong> Sem professores preparados para integrar a IA pedagogicamente, as desvantagens tendem a sobrepor-se às vantagens. O investimento em formação docente é a condição de base.</div>
+    </div>
+    <div class="takeaway-item">
+      <div class="takeaway-icon">⚖️</div>
+      <div class="takeaway-text"><strong>Não há resposta simples — e isso é importante.</strong> A questão não é "IA sim ou não": é "que IA, para quê, em que condições, com que salvaguardas". Esta complexidade exige cidadãos capazes de pensar criticamente — ou seja, exactamente o que a escola deve desenvolver.</div>
+    </div>
+    <div class="takeaway-item">
+      <div class="takeaway-icon">📜</div>
+      <div class="takeaway-text"><strong>O quadro regulatório europeu está a avançar.</strong> O AI Act da União Europeia (2024) classifica alguns usos de IA em educação como de "alto risco", exigindo transparência, supervisão humana e proteção especial para menores. A ética e a lei estão a acompanhar a tecnologia.</div>
+    </div>
+  </div>
+
+  <!-- DEBATE QUESTIONS -->
+  <div class="debate-section">
+    <div class="debate-header">
+      <div class="debate-icon">💬</div>
+      <div class="debate-title">Perguntas para continuar a pensar</div>
+    </div>
+    <div class="debate-q">
+      <span class="q-num">01</span>
+      <span>Se a IA pode ajudar-te a aprender mais rápido, existe o risco de aprenderes menos profundamente? Como podes usar a IA sem perder a capacidade de pensar por ti próprio?</span>
+    </div>
+    <div class="debate-q">
+      <span class="q-num">02</span>
+      <span>Os teus dados escolares — erros, tempo de resposta, comportamento — podem ser recolhidos por plataformas de IA. Quem deve ter acesso a estes dados? Até quando?</span>
+    </div>
+    <div class="debate-q">
+      <span class="q-num">03</span>
+      <span>Se um aluno entrega um trabalho feito por IA, obtém a nota — mas aprendeu alguma coisa? O que é que a avaliação escolar deve realmente medir?</span>
+    </div>
+    <div class="debate-q">
+      <span class="q-num">04</span>
+      <span>A IA pode ter vieses que discriminam grupos de alunos. Quem deve ser responsável por garantir que os sistemas de IA na escola são justos?</span>
+    </div>
+    <div class="debate-q">
+      <span class="q-num">05</span>
+      <span>Imagina uma escola onde a IA personaliza todo o ensino. Que perderia essa escola em relação à escola que conheces? Valeria a pena?</span>
+    </div>
+    <div class="debate-q">
+      <span class="q-num">06</span>
+      <span>Num mundo em que a IA faz cada vez mais coisas, o que é que só tu — como ser humano — podes fazer? O que é que a escola deve ensinar que a IA não consegue substituir?</span>
+    </div>
+  </div>
+
+  <!-- SOURCES -->
+  <div class="sources-section">
+    <div class="sources-title">Referências académicas principais (seleção)</div>
+    <div class="source-item"><span class="source-authors">Baker, R. S. & Inventado, P. S.</span> (2014). Educational Data Mining and Learning Analytics. In <em>Learning Analytics</em>. Springer, New York.</div>
+    <div class="source-item"><span class="source-authors">Bjork, E. L. & Bjork, R. A.</span> (2011). Making things hard on yourself, but in a good way. In <em>Psychology and the Real World</em>. Worth Publishers.</div>
+    <div class="source-item"><span class="source-authors">Bloom, B. S.</span> (1984). The 2 sigma problem: The search for methods of group instruction as effective as one-to-one tutoring. <em>Educational Researcher, 13</em>(6), 4-16.</div>
+    <div class="source-item"><span class="source-authors">Brown, P. C., Roediger, H. L., & McDaniel, M. A.</span> (2014). <em>Make It Stick: The Science of Successful Learning</em>. Harvard University Press.</div>
+    <div class="source-item"><span class="source-authors">Carretero, S., Vuorikari, R., & Punie, Y.</span> (2022). <em>DigComp 3.0: The Digital Competence Framework for Citizens</em>. Publications Office of the European Union.</div>
+    <div class="source-item"><span class="source-authors">Cotton, D. R. E., Cotton, P. A., & Shipway, J. R.</span> (2023). Chatting and cheating: Ensuring academic integrity in the era of ChatGPT. <em>Innovations in Education and Teaching International, 60</em>(1).</div>
+    <div class="source-item"><span class="source-authors">Deci, E. L. & Ryan, R. M.</span> (2000). The "what" and "why" of goal pursuits: Human needs and the self-determination of behavior. <em>Psychological Inquiry, 11</em>(4), 227-268.</div>
+    <div class="source-item"><span class="source-authors">Eubanks, V.</span> (2018). <em>Automating Inequality: How High-Tech Tools Profile, Police, and Punish the Poor</em>. St. Martin's Press.</div>
+    <div class="source-item"><span class="source-authors">Goleman, D.</span> (1995). <em>Emotional Intelligence</em>. Bantam Books.</div>
+    <div class="source-item"><span class="source-authors">Haidt, J. & Allen, N. B.</span> (2020). Scrutinizing the effects of digital technology on mental health. <em>Nature, 578</em>, 226-227.</div>
+    <div class="source-item"><span class="source-authors">Hattie, J.</span> (2009). <em>Visible Learning: A Synthesis of Over 800 Meta-Analyses Relating to Achievement</em>. Routledge.</div>
+    <div class="source-item"><span class="source-authors">Hattie, J. & Timperley, H.</span> (2007). The power of feedback. <em>Review of Educational Research, 77</em>(1), 81-112.</div>
+    <div class="source-item"><span class="source-authors">Ji, Z., et al.</span> (2023). Survey of hallucination in natural language generation. <em>ACM Computing Surveys, 55</em>(12).</div>
+    <div class="source-item"><span class="source-authors">Kapur, M.</span> (2016). Examining productive failure, productive success, unproductive failure, and unproductive success in learning. <em>Educational Psychologist, 51</em>(2).</div>
+    <div class="source-item"><span class="source-authors">Luckin, R., Holmes, W., Griffiths, M., & Forcier, L. B.</span> (2016). <em>Intelligence Unleashed: An Argument for AI in Education</em>. Pearson Education.</div>
+    <div class="source-item"><span class="source-authors">Ma, W., Adesope, O. O., Nesbit, J. C., & Liu, Q.</span> (2014). Intelligent tutoring systems and learning outcomes: A meta-analysis. <em>Journal of Educational Psychology, 106</em>(4).</div>
+    <div class="source-item"><span class="source-authors">Noble, S. U.</span> (2018). <em>Algorithms of Oppression: How Search Engines Reinforce Racism</em>. NYU Press.</div>
+    <div class="source-item"><span class="source-authors">OCDE</span> (2023). <em>PISA 2022 Results</em>. OECD Publishing, Paris.</div>
+    <div class="source-item"><span class="source-authors">Rose, D. H. & Meyer, A.</span> (2002). <em>Teaching Every Student in the Digital Age: Universal Design for Learning</em>. ASCD.</div>
+    <div class="source-item"><span class="source-authors">Sparrow, B., Liu, J., & Wegner, D. M.</span> (2011). Google effects on memory: Cognitive consequences of having information at our fingertips. <em>Science, 333</em>(6043), 776-778.</div>
+    <div class="source-item"><span class="source-authors">Twenge, J. M. & Campbell, W. K.</span> (2019). Media use is linked to lower psychological well-being. <em>JAMA Pediatrics.</em></div>
+    <div class="source-item"><span class="source-authors">UNESCO</span> (2023). <em>Guidance for Generative AI in Education and Research</em>. UNESCO, Paris.</div>
+    <div class="source-item"><span class="source-authors">União Europeia</span> (2024). <em>AI Act — Regulamento (UE) 2024/1689 do Parlamento Europeu e do Conselho</em>. Jornal Oficial da UE.</div>
+    <div class="source-item"><span class="source-authors">VanLehn, K.</span> (2011). The relative effectiveness of human tutoring, intelligent tutoring systems, and other tutoring systems. <em>Educational Psychologist, 46</em>(3).</div>
+    <div class="source-item"><span class="source-authors">van Dijk, J.</span> (2020). <em>The Digital Divide</em>. Polity Press.</div>
+    <div class="source-item"><span class="source-authors">Williamson, B., Eynon, R., & Potter, J.</span> (2020). Pandemic politics, pedagogies and practices: digital technologies and distance education during the coronavirus emergency. <em>Learning, Media and Technology, 45</em>(2).</div>
+    <div class="source-item"><span class="source-authors">Wineburg, S. & McGrew, S.</span> (2019). Lateral reading and the nature of expertise: Reading less and learning more when evaluating digital information. <em>Teachers College Record.</em></div>
+    <div class="source-item"><span class="source-authors">World Economic Forum</span> (2023). <em>Future of Jobs Report 2023</em>. WEF, Geneva.</div>
+  </div>
+
+</div><!-- /tab-syn -->
+
+</div><!-- /main -->
+
+<div class="footer">
+  Desenvolvido com base em literatura científica académica revisada por pares &nbsp;·&nbsp; Recomendado: abrir em ecrã completo
+  <br><span style="opacity:0.6">Para uso em contexto educativo · Ensino Básico e Secundário · © RBE 2025</span>
+</div>
+
+<script>
+  function showTab(tab, btn) {
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active-van','active-des','active-syn'));
+    document.getElementById('tab-' + tab).classList.add('active');
+    if (tab === 'van') btn.classList.add('active-van');
+    else if (tab === 'des') btn.classList.add('active-des');
+    else btn.classList.add('active-syn');
+  }
+
+  function toggleCard(id) {
+    const card = document.getElementById(id);
+    card.classList.toggle('open');
+  }
+
+  // Counter animation
+  function animateCounter(el, target, suffix) {
+    let start = 0;
+    const duration = 1200;
+    const startTime = performance.now();
+    function update(now) {
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const current = Math.round(eased * target);
+      el.textContent = current + (suffix || '');
+      if (progress < 1) requestAnimationFrame(update);
+    }
+    requestAnimationFrame(update);
+  }
+
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      animateCounter(document.getElementById('cnt-van'), 10);
+      animateCounter(document.getElementById('cnt-des'), 10);
+      animateCounter(document.getElementById('cnt-est'), 40, '+');
+    }, 400);
+  });
+</script>
+</body>
+</html>
